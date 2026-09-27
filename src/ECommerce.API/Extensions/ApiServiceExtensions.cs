@@ -1,5 +1,9 @@
 ﻿namespace ECommerce.API.Extensions;
 
-public class ApiServiceExtensions
+public static class ApiServiceExtensions
 {
+    public static IServiceCollection AddApiServices ( this IServiceCollection services )
+    {
+        return services;
+    }
 }

@@ -1,13 +1,21 @@
 
+using ECommerce.API.Extensions;
+using ECommerce.Application.Extensions;
+using ECommerce.Infrastructure.Extensions;
+
 namespace ECommerce.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main ( string[] args )
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddApplicationServices();
+            builder.Services.AddInfrastructureServices();
+            builder.Services.AddApiServices();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
