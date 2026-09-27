@@ -23,6 +23,7 @@ namespace ECommerce.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddProblemDetails();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

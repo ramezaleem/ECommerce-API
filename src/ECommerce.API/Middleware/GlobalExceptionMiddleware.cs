@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Text.Json;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.API.Middleware;
 
@@ -7,13 +6,16 @@ public class GlobalExceptionMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<GlobalExceptionMiddleware> _logger;
+    private readonly IProblemDetailsService _problemDetailsService;
 
     public GlobalExceptionMiddleware (
         RequestDelegate next,
-        ILogger<GlobalExceptionMiddleware> logger )
+        ILogger<GlobalExceptionMiddleware> logger,
+        IProblemDetailsService problemDetailsService )
     {
         _next = next;
         _logger = logger;
+        _problemDetailsService = problemDetailsService;
     }
 
     public async Task InvokeAsync ( HttpContext context )
@@ -26,17 +28,18 @@ public class GlobalExceptionMiddleware
         {
             _logger.LogError(ex, "An unhandled exception occurred.");
 
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-            var response = new
+            await _problemDetailsService.WriteAsync(new ProblemDetailsContext
             {
-                statusCode = context.Response.StatusCode,
-                message = "An unexpected error occurred."
-            };
-
-            await context.Response.WriteAsync(
-                JsonSerializer.Serialize(response));
+                HttpContext = context,
+                ProblemDetails = new ProblemDetails
+                {
+                    Status = StatusCodes.Status500InternalServerError,
+                    Title = "An unexpected error occurred.",
+                    Detail = "An internal server error occurred."
+                }
+            });
         }
     }
 }
