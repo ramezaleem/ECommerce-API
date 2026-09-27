@@ -1,5 +1,6 @@
 
 using ECommerce.API.Extensions;
+using ECommerce.API.Middleware;
 using ECommerce.Application.Extensions;
 using ECommerce.Infrastructure.Extensions;
 
@@ -30,6 +31,8 @@ namespace ECommerce.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 
